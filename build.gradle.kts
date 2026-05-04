@@ -187,6 +187,14 @@ repositories {
     maven("https://nexus.scarsz.me/content/groups/public/")
     // Multiverse-Core v5
     maven("https://repo.onarandombox.com/content/groups/public/")
+    maven {
+        name = "bloodstoneRepositoryPrivate"
+        url = uri("https://repo.bloodstone.boo/private")
+        credentials(PasswordCredentials::class)
+        authentication {
+            create<BasicAuthentication>("basic")
+        }
+    }
 }
 
 dependencies {
@@ -296,6 +304,11 @@ dependencies {
 
     // debug hooks
     compileOnly("ch.njol:skript:2.5")
+
+    // Bloodstone
+    compileOnly("boo.bloodstone:CommonBloodLib:1.0-SNAPSHOT")
+    compileOnly("boo.bloodstone:BloodOfflinePlayersAPIClient:1.4")
+    compileOnly("boo.bloodstone:BloodOfflinePlayersAPICommon:1.4")
 
     // JUnit
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.3")

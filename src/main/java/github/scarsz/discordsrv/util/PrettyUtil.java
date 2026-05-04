@@ -20,7 +20,11 @@
 
 package github.scarsz.discordsrv.util;
 
+import boo.bloodstone.bloodOfflinePlayersAPI.MessageClient;
+import boo.bloodstone.bloodOfflinePlayersAPI.PlayerProfile;
 import github.scarsz.discordsrv.DiscordSRV;
+import kotlin.coroutines.EmptyCoroutineContext;
+import kotlinx.coroutines.BuildersKt;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
@@ -47,13 +51,10 @@ public class PrettyUtil {
     }
 
     public static String beautifyUsername(OfflinePlayer player) {
-        return beautifyUsername(player, "<Unknown>", true);
-    }
-
-    public static String beautifyUsername(OfflinePlayer player, String noUsernameFormat, boolean includeUuid) {
-        if (player == null) return noUsernameFormat;
+        if (player == null) return "<Unknown>";
 
         String name = player.getName();
+
         if (name == null && player.isOnline()) {
             // maybe this will work?
             Player onlinePlayer = player.getPlayer();
@@ -61,7 +62,22 @@ public class PrettyUtil {
                 name = onlinePlayer.getName();
             }
         }
-        return (name != null ? name : noUsernameFormat) + (includeUuid ? " (" + player.getUniqueId() + ")" : "");
+
+        if (name != null) {
+            return name;
+        }
+
+        try {
+            MessageClient client = new MessageClient();
+
+            PlayerProfile profile = BuildersKt.runBlocking(
+                EmptyCoroutineContext.INSTANCE, (coroutineScope, continuation) ->
+                    client.getProfile(player.getUniqueId(), continuation)
+            );
+            return profile.getName();
+        } catch (Exception ignored) {
+            return "<Unknown>";
+        }
     }
 
     /**
@@ -74,7 +90,7 @@ public class PrettyUtil {
     }
 
     public static String beautifyNickname(OfflinePlayer player, String noUsernameFormat, boolean includeUuid) {
-        if (player == null || player.getName() == null) return noUsernameFormat;
+        if (player == null) return noUsernameFormat;
 
         if (player.isOnline()) {
             if (player.getPlayer() == null) return beautifyUsername(player);
