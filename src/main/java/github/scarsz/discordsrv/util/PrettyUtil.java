@@ -50,6 +50,13 @@ public class PrettyUtil {
                 : user.getName() + (includeId ? " (#" + user.getId() + ")" : "");
     }
 
+    @Deprecated
+    public static String beautifyUsername(OfflinePlayer player, String notFoundName, boolean useless) {
+        if (player == null) return notFoundName;
+
+        return beautifyUsername(player);
+    }
+
     public static String beautifyUsername(OfflinePlayer player) {
         if (player == null) return "<Unknown>";
 
