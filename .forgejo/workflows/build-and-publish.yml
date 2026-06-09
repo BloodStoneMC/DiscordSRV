@@ -1,0 +1,12 @@
+name: Build and publish
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: java21
+    uses: BloodStone/actions/.forgejo/workflows/build-and-publish.yml@main
+    with:
+      gradle_tasks: --max-workers=1 clean publish -x test
+    secrets: inherit

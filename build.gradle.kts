@@ -153,14 +153,11 @@ tasks {
 publishing {
     repositories {
         maven {
-            val repository = "https://nexus.scarsz.me/content/repositories/"
-            val releasesRepoUrl = repository + "releases"
-            val snapshotsRepoUrl = repository + "snapshots"
-            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
-
-            credentials {
-                username = System.getenv("REPO_USERNAME") ?: "ci"
-                password = (System.getenv("REPO_PASSWORD") ?: project.property("repoPassword")).toString()
+            name = "bloodstoneRepositoryPrivate"
+            url = uri("https://repo.bloodstone.boo/private")
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
             }
         }
     }
@@ -307,8 +304,8 @@ dependencies {
 
     // Bloodstone
     compileOnly("boo.bloodstone:CommonBloodLib:1.0-SNAPSHOT")
-    compileOnly("boo.bloodstone:BloodOfflinePlayersAPIClient:1.4")
-    compileOnly("boo.bloodstone:BloodOfflinePlayersAPICommon:1.4")
+    compileOnly("boo.bloodstone:BloodOfflinePlayersAPIClient:1.6.2-SNAPSHOT")
+    compileOnly("boo.bloodstone:BloodOfflinePlayersAPICommon:1.6.2-SNAPSHOT")
 
     // JUnit
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.3")
